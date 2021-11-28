@@ -1,5 +1,5 @@
 export type CommonMetadata = {
-  comment?: string;
+  description?: string;
   [key: string]: any;
 };
 
@@ -28,7 +28,7 @@ export type Codec<I, O, T = string, P = CodecProps> = {
 
 export type PassThroughCodec<T> = Codec<T, T>;
 
-export type AnyCodec = Codec<any, any, any, any>;
+export type AnyCodec = Codec<any, any, any>;
 
 export type Cx<C extends AnyCodec> = C extends Codec<infer I, infer O, infer T, infer P>
   ? { I: I; O: O; T: T; P: P }

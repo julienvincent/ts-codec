@@ -62,8 +62,7 @@ const EnumParser = createParser<defs.EnumCodec<any>>(CodecType.Enum, (codec) => 
 
 const LiteralParser = createParser<defs.LiteralCodec<any>>(CodecType.Literal, (codec) => {
   return {
-    type: 'string',
-    enum: [codec.props.value]
+    const: codec.props.value
   };
 });
 
@@ -163,7 +162,16 @@ const RootParser = (codec: AnyCodec, options: GenerationContext) => {
   if (!parser) {
     throw new Error(`No parser configured for codec ${codec._tag}`);
   }
-  return parser.parse(codec, options);
+  const schema = parser.parse(codec, options);
+
+  if (codec.props.metadata?.description) {
+    return {
+      description: codec.props.metadata.description,
+      ...schema
+    };
+  }
+
+  return schema;
 };
 
 export const generateJSONSchema = (codec: AnyCodec, options?: GenerationOptions) => {

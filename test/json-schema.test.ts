@@ -38,7 +38,11 @@ describe('json-schema', () => {
           t.object({
             b: t.number
           })
-        )
+        ),
+
+      with_description: t.string.meta({
+        description: 'This is a description'
+      })
     });
 
     expect(t.generateJSONSchema(identity_schema)).toMatchSnapshot();

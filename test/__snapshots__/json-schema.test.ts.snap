@@ -34,16 +34,16 @@ Object {
 
 exports[`json-schema it should generate schemas from recursive codecs 1`] = `
 Object {
-  "$ref": "#/definitions/11300e4a6c",
+  "$ref": "#/definitions/1e90c7546b",
   "definitions": Object {
-    "11300e4a6c": Object {
+    "1e90c7546b": Object {
       "additionalProperties": false,
       "properties": Object {
         "a": Object {
           "type": "string",
         },
         "b": Object {
-          "$ref": "#/definitions/11300e4a6c",
+          "$ref": "#/definitions/1e90c7546b",
         },
       },
       "required": Array [
@@ -121,10 +121,7 @@ Object {
       ],
     },
     "literal": Object {
-      "enum": Array [
-        "literal",
-      ],
-      "type": "string",
+      "const": "literal",
     },
     "multi": Object {
       "anyOf": Array [
@@ -170,6 +167,10 @@ Object {
       ],
       "type": "array",
     },
+    "with_description": Object {
+      "description": "This is a description",
+      "type": "string",
+    },
   },
   "required": Array [
     "string",
@@ -185,6 +186,7 @@ Object {
     "deeper_array",
     "record",
     "intersection",
+    "with_description",
   ],
   "type": "object",
 }
