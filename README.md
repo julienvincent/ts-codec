@@ -26,7 +26,24 @@ schema.decode({ name: 'James', date: '1970-01-01T00:00:00.000Z' }) // { name: 'J
 t.Decoded<typeof schema> // { name: string; date: Date; }
 t.Encoded<typeof schema> // { name: string; date: string; }
 
-t.generateJSONSchema(schema) // Valid JSON-Schema which can be consumed by third-party validators
+// Parser for the custom `date` codec that isn't part of the standard set provided by ts-codecs
+const DateParser = {
+  tag: date._tag,
+  parse: () => ({ type: "string" })
+}
+
+t.generateJSONSchema(schema, { parsers: [ DateParser ]})
+/*
+=> {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    date: { type: "string" }
+  },
+  additionalProperties: false,
+  required: ["name", "date"]
+}
+*/
 ```
 
 ## TODO
