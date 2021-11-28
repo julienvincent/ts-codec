@@ -10,7 +10,10 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "outDir": "dist",
+    "declarationDir": "dist/@types",
+    "rootDir": "src"
   },
   "include": ["src"]
 }

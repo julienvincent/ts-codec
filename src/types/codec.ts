@@ -1,31 +1,40 @@
 import * as defs from '../definitions';
 import * as utils from '../utils';
 
-export const codec = <I, O, T extends string = string>(
+export const codec = <I, O, T extends string = string, P extends defs.CodecProps = defs.CodecProps>(
   tag: T,
   encode: defs.Transformer<I, O>,
-  decode: defs.Transformer<O, I>
+  decode: defs.Transformer<O, I>,
+  props?: P & defs.CodecProps
 ) => {
-  const codec: defs.TaggedCodec<T, I, O> = {
+  const c: defs.Codec<I, O, T, P & defs.CodecProps> = {
     _tag: tag,
+
+    props: {
+      ...(props || ({} as P)),
+      metadata: props?.metadata ?? {},
+      required: props?.required ?? true
+    },
 
     encode,
     decode,
 
-    and: <C extends defs.AnyCodec>(extention: C) => intersection(codec, extention),
-    or: <C extends defs.AnyCodec>(extention: C) => union(codec, extention),
+    and: <C extends defs.AnyCodec>(extention: C) => intersection(c, extention),
+    or: <C extends defs.AnyCodec>(extention: C) => union(c, extention),
 
     meta: (metadata) => {
-      return {
-        ...codec,
-        metadata: metadata
-      };
+      return codec(tag, encode, decode, {
+        ...c.props,
+        metadata: {
+          ...c.props.metadata,
+          ...metadata
+        }
+      });
     },
 
-    required: true,
-    optional: () => optional(codec)
+    optional: () => optional(c)
   };
-  return codec;
+  return c;
 };
 
 const mergeSameCodecs = <T extends defs.CodecType.Intersection | defs.CodecType.Union>(
@@ -35,12 +44,12 @@ const mergeSameCodecs = <T extends defs.CodecType.Intersection | defs.CodecType.
 ) => {
   const codecs = [];
   if (utils.isCodecType(c1, tag as defs.CodecType.Intersection)) {
-    codecs.push(...c1.codecs);
+    codecs.push(...c1.props.codecs);
   } else {
     codecs.push(c1);
   }
   if (utils.isCodecType(c2, tag as defs.CodecType.Intersection)) {
-    codecs.push(...c2.codecs);
+    codecs.push(...c2.props.codecs);
   } else {
     codecs.push(c2);
   }
@@ -48,7 +57,10 @@ const mergeSameCodecs = <T extends defs.CodecType.Intersection | defs.CodecType.
   return codecs;
 };
 
-export const intersection = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>(c1: C1, c2: C2) => {
+export const intersection = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>(
+  c1: C1,
+  c2: C2
+): defs.Intersection<C1, C2> => {
   const codecs = mergeSameCodecs(defs.CodecType.Intersection, c1, c2);
 
   const transformer = (transformer: 'encode' | 'decode') => (data: any) => {
@@ -60,18 +72,12 @@ export const intersection = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>
     }, {}) as any;
   };
 
-  const intersection = codec(
-    defs.CodecType.Intersection,
-    transformer('encode'),
-    transformer('decode')
-  ) as defs.Intersection<C1, C2>;
-
-  intersection.codecs = codecs;
-
-  return intersection;
+  return codec(defs.CodecType.Intersection, transformer('encode'), transformer('decode'), {
+    codecs: codecs
+  });
 };
 
-export const union = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>(c1: C1, c2: C2) => {
+export const union = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>(c1: C1, c2: C2): defs.Union<C1, C2> => {
   const codecs = mergeSameCodecs(defs.CodecType.Union, c1, c2);
 
   const transformer = (transformer: 'encode' | 'decode') => (data: any) => {
@@ -96,28 +102,29 @@ export const union = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>(c1: C1
     );
   };
 
-  const union = codec(defs.CodecType.Union, transformer('encode'), transformer('decode')) as defs.Union<C1, C2>;
-
-  union.codecs = codecs;
-
-  return union;
+  return codec(defs.CodecType.Union, transformer('encode'), transformer('decode'), {
+    codecs
+  });
 };
 
-export const optional = <T extends defs.AnyCodec>(codec: T): defs.OptionalCodec<T> => {
-  return {
-    ...codec,
-    required: false,
-    encode: (data) => {
+export const optional = <T extends defs.AnyCodec>(type: T): defs.OptionalCodec<T> => {
+  return codec(
+    type._tag,
+    (data) => {
       if (data === undefined) {
         return undefined;
       }
-      return codec.encode(data);
+      return type.encode(data);
     },
-    decode: (data) => {
+    (data) => {
       if (data === undefined) {
         return undefined;
       }
-      return codec.decode(data);
+      return type.decode(data);
+    },
+    {
+      ...type.props,
+      required: false
     }
-  };
+  );
 };

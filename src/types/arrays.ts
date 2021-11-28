@@ -2,25 +2,24 @@ import * as defs from '../definitions';
 import * as utils from '../utils';
 import { codec } from './codec';
 
-export const array = <T extends defs.AnyCodec>(element: T): defs.ArrayCodec<T> => {
+export const array = <T extends defs.AnyCodec>(type: T): defs.ArrayCodec<T> => {
   const assertion = (data: any) => {
     if (!Array.isArray(data)) {
       throw new utils.TransformError([`Expected an array but got ${typeof data}`]);
     }
   };
-  const array = codec(
+  return codec(
     defs.CodecType.Array,
     (data) => {
       assertion(data);
-      return data.map(element.encode);
+      return data.map(type.encode);
     },
     (data) => {
       assertion(data);
-      return data.map(element.decode);
+      return data.map(type.decode);
+    },
+    {
+      type
     }
-  ) as defs.ArrayCodec<T>;
-
-  array.element = element;
-
-  return array;
+  );
 };

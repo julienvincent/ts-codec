@@ -9,7 +9,7 @@ export const identityCodec = <T extends defs.CodecType>(type: T): defs.IdentityC
     }
     return data;
   };
-  return codec(type, transform, transform);
+  return codec(type, transform, transform) as any ;
 };
 
 export const string = identityCodec(defs.CodecType.String);

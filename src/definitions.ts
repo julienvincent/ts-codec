@@ -3,14 +3,20 @@ export type CommonMetadata = {
   [key: string]: any;
 };
 
+export type CodecProps = {
+  metadata?: CommonMetadata;
+  required?: boolean;
+  [key: string]: any;
+};
+
 export type Transformer<I, O> = (data: I) => O;
 
-export type Codec<I, O> = {
-  _tag: string;
+export type Codec<I, O, T = string, P = CodecProps> = {
+  _tag: T;
 
-  meta: (metadata: CommonMetadata) => Codec<I, O>;
+  props: CodecProps & P;
 
-  metadata?: CommonMetadata;
+  meta: (metadata: CommonMetadata) => Codec<I, O, T, P>;
 
   encode: Transformer<I, O>;
   decode: Transformer<O, I>;
@@ -18,19 +24,16 @@ export type Codec<I, O> = {
   and: <T extends AnyCodec>(codec: T) => Intersection<Codec<I, O>, T>;
   or: <T extends AnyCodec>(codec: T) => Union<Codec<I, O>, T>;
 
-  optional: () => OptionalCodec<Codec<I, O>>;
-
-  required: boolean;
+  optional: () => OptionalCodec<Codec<I, O, T, P>>;
 };
 
-export type AnyCodec = Codec<any, any>;
+export type AnyCodec = Codec<any, any, any, any>;
 
-export type TaggedCodec<T, I, O> = Codec<I, O> & {
-  _tag: T;
-};
-
-export type Ix<C extends AnyCodec> = C extends Codec<infer I, any> ? I : never;
-export type Ox<C extends AnyCodec> = C extends Codec<any, infer O> ? O : never;
+export type Cx<C extends AnyCodec> = C extends Codec<infer I, infer O, infer T, infer P>
+  ? { I: I; O: O; T: T; P: P }
+  : never;
+export type Ix<C extends AnyCodec> = Cx<C>['I'];
+export type Ox<C extends AnyCodec> = Cx<C>['O'];
 
 export type AnyObjectCodecShape = Record<string, AnyCodec>;
 
@@ -64,41 +67,62 @@ export enum CodecType {
   Intersection = 'intersection'
 }
 
-export type Intersection<C1 extends AnyCodec, C2 extends AnyCodec> = TaggedCodec<
-  CodecType.Intersection,
+export type Intersection<C1 extends AnyCodec, C2 extends AnyCodec> = Codec<
   Ix<C1> & Ix<C2>,
-  Ox<C1> & Ox<C2>
-> & {
-  codecs: AnyCodec[];
-};
+  Ox<C1> & Ox<C2>,
+  CodecType.Intersection,
+  {
+    codecs: AnyCodec[];
+  }
+>;
 
-export type Union<C1 extends AnyCodec, C2 extends AnyCodec> = TaggedCodec<
-  CodecType.Union,
+export type Union<C1 extends AnyCodec, C2 extends AnyCodec> = Codec<
   Ix<C1> | Ix<C2>,
-  Ox<C1> | Ox<C2>
-> & {
-  codecs: AnyCodec[];
-};
+  Ox<C1> | Ox<C2>,
+  CodecType.Union,
+  {
+    codecs: AnyCodec[];
+  }
+>;
 
-export type ObjectCodec<T extends AnyObjectCodecShape> = TaggedCodec<CodecType.Object, MappedIx<T>, MappedOx<T>> & {
-  shape: T;
-};
+export type ObjectCodec<T extends AnyObjectCodecShape> = Codec<
+  MappedIx<T>,
+  MappedOx<T>,
+  CodecType.Object,
+  {
+    shape: T;
+  }
+>;
 
-export type RecordCodec<T extends AnyCodec> = TaggedCodec<
-  CodecType.Record,
+export type RecordCodec<T extends AnyCodec> = Codec<
   Record<string, Ix<T>>,
-  Record<string, Ox<T>>
-> & {
-  type: T;
-};
+  Record<string, Ox<T>>,
+  CodecType.Record,
+  {
+    type: T;
+  }
+>;
 
-export type ArrayCodec<T extends AnyCodec> = TaggedCodec<CodecType.Array, Ix<T>[], Ox<T>[]> & {
-  element: T;
-};
+export type ArrayCodec<T extends AnyCodec> = Codec<
+  Ix<T>[],
+  Ox<T>[],
+  CodecType.Array,
+  {
+    type: T;
+  }
+>;
 
-export type RecursiveCodec<T extends AnyCodec> = TaggedCodec<CodecType.Recursive, Ix<T>, Ox<T>> & {
-  resolver: () => T;
-};
+export type RecursiveCodec<T extends AnyCodec> = Codec<
+  Ix<T>,
+  Ox<T>,
+  CodecType.Recursive,
+  {
+    id: string;
+    resolver: () => T;
+  }
+>;
+
+export type OptionalCodec<T extends AnyCodec> = Codec<Ix<T> | undefined, Ox<T> | undefined, Cx<T>['T'], Cx<T>['P']>;
 
 type IdentityMapping<T extends CodecType> = T extends CodecType.String
   ? string
@@ -108,6 +132,4 @@ type IdentityMapping<T extends CodecType> = T extends CodecType.String
   ? boolean
   : never;
 
-export type IdentityCodec<T extends CodecType> = TaggedCodec<T, IdentityMapping<T>, IdentityMapping<T>>;
-
-export type OptionalCodec<T extends AnyCodec> = Codec<Ix<T> | undefined, Ox<T> | undefined>;
+export type IdentityCodec<T extends CodecType> = Codec<IdentityMapping<T>, IdentityMapping<T>, T>;

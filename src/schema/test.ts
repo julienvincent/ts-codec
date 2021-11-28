@@ -60,7 +60,7 @@ const res2 = Thing.encode({
 });
 console.log(res2);
 
-// type ttt = t.Ix<typeof Thing>;
+type ttt = t.Ix<typeof Thing>;
 
 // const schema2 = t
 //   .object({

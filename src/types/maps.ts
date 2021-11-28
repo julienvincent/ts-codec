@@ -26,11 +26,9 @@ export const object = <T extends defs.AnyObjectCodecShape>(shape: T): defs.Objec
     }, {}) as any;
   };
 
-  const object = codec(defs.CodecType.Object, transformer('encode'), transformer('decode')) as defs.ObjectCodec<T>;
-
-  object.shape = shape;
-
-  return object;
+  return codec(defs.CodecType.Object, transformer('encode'), transformer('decode'), {
+    shape
+  });
 };
 
 export const record = <T extends defs.AnyCodec>(type: T): defs.RecordCodec<T> => {
@@ -46,9 +44,7 @@ export const record = <T extends defs.AnyCodec>(type: T): defs.RecordCodec<T> =>
     }, {}) as any;
   };
 
-  const record = codec(defs.CodecType.Record, transformer('encode'), transformer('decode')) as defs.RecordCodec<T>;
-
-  record.type = type;
-
-  return record;
+  return codec(defs.CodecType.Record, transformer('encode'), transformer('decode'), {
+    type
+  });
 };

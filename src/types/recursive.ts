@@ -1,8 +1,9 @@
 import * as defs from '../definitions';
+import * as crypto from 'crypto';
 import { codec } from './codec';
 
 export const recursive = <T extends defs.AnyCodec>(resolver: () => T): defs.RecursiveCodec<T> => {
-  const circular = codec(
+  return codec(
     defs.CodecType.Recursive,
     (data) => {
       const codec = resolver();
@@ -11,10 +12,10 @@ export const recursive = <T extends defs.AnyCodec>(resolver: () => T): defs.Recu
     (data) => {
       const codec = resolver();
       return codec.decode(data);
+    },
+    {
+      resolver: resolver,
+      id: crypto.randomBytes(10).toString('hex')
     }
-  ) as defs.RecursiveCodec<T>;
-
-  circular.resolver = resolver;
-
-  return circular;
+  );
 };

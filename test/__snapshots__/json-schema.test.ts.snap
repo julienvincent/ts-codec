@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`json-schema it should generate schemas from dual codecs 1`] = `
+Object {
+  "additionalProperties": false,
+  "definitions": Object {},
+  "properties": Object {
+    "created_at": Object {
+      "type": "string",
+    },
+  },
+  "required": Array [
+    "created_at",
+  ],
+  "type": "object",
+}
+`;
+
+exports[`json-schema it should generate schemas from dual codecs 2`] = `
+Object {
+  "additionalProperties": false,
+  "definitions": Object {},
+  "properties": Object {
+    "created_at": Object {
+      "nodeType": "date",
+    },
+  },
+  "required": Array [
+    "created_at",
+  ],
+  "type": "object",
+}
+`;
+
+exports[`json-schema it should generate schemas from recursive codecs 1`] = `
+Object {
+  "$ref": "#/definitions/6a348d17c935b63c65bb",
+  "definitions": Object {
+    "6a348d17c935b63c65bb": Object {
+      "additionalProperties": false,
+      "properties": Object {
+        "a": Object {
+          "type": "string",
+        },
+        "b": Object {
+          "$ref": "#/definitions/6a348d17c935b63c65bb",
+        },
+      },
+      "required": Array [
+        "a",
+      ],
+      "type": "object",
+    },
+  },
+}
+`;
+
+exports[`json-schema it should handle a simple identity schema 1`] = `
+Object {
+  "additionalProperties": false,
+  "definitions": Object {},
+  "properties": Object {
+    "array": Object {
+      "items": Object {
+        "type": "string",
+      },
+      "type": "array",
+    },
+    "boolean": Object {
+      "type": "boolean",
+    },
+    "deeper_array": Object {
+      "items": Object {
+        "additionalProperties": false,
+        "properties": Object {
+          "a": Object {
+            "type": "string",
+          },
+        },
+        "required": Array [
+          "a",
+        ],
+        "type": "object",
+      },
+      "type": "array",
+    },
+    "intersection": Object {
+      "allOf": Array [
+        Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "a": Object {
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "a",
+          ],
+          "type": "object",
+        },
+        Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "b": Object {
+              "type": "number",
+            },
+          },
+          "required": Array [
+            "b",
+          ],
+          "type": "object",
+        },
+      ],
+    },
+    "multi": Object {
+      "anyOf": Array [
+        Object {
+          "type": "string",
+        },
+        Object {
+          "type": "number",
+        },
+        Object {
+          "type": "boolean",
+        },
+      ],
+    },
+    "number": Object {
+      "type": "number",
+    },
+    "optional": Object {
+      "type": "string",
+    },
+    "record": Object {
+      "additionalProperties": Object {
+        "type": "string",
+      },
+      "properties": Object {},
+      "required": Array [],
+      "type": "object",
+    },
+    "string": Object {
+      "type": "string",
+    },
+  },
+  "required": Array [
+    "string",
+    "number",
+    "boolean",
+    "multi",
+    "array",
+    "deeper_array",
+    "record",
+    "intersection",
+  ],
+  "type": "object",
+}
+`;

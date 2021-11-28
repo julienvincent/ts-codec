@@ -1,5 +1,7 @@
 export * from './definitions';
 
+export * from './generation';
+
 export * from './types/primitives';
 export * from './types/recursive';
 export * from './types/arrays';
