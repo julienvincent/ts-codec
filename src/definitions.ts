@@ -55,6 +55,7 @@ export enum CodecType {
   Boolean = 'boolean',
 
   Object = 'object',
+  Record = 'record',
   Array = 'array',
 
   Union = 'union',
@@ -79,6 +80,14 @@ export type Union<C1 extends AnyCodec, C2 extends AnyCodec> = TaggedCodec<
 
 export type ObjectCodec<T extends AnyObjectCodecShape> = TaggedCodec<CodecType.Object, MappedIx<T>, MappedOx<T>> & {
   shape: T;
+};
+
+export type RecordCodec<T extends AnyCodec> = TaggedCodec<
+  CodecType.Record,
+  Record<string, Ix<T>>,
+  Record<string, Ox<T>>
+> & {
+  type: T;
 };
 
 export type ArrayCodec<T extends AnyCodec> = TaggedCodec<CodecType.Array, Ix<T>[], Ox<T>[]> & {

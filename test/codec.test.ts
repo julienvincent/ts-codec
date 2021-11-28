@@ -33,6 +33,17 @@ describe('codecs', () => {
     expect(schema.decode({ created_at: reference.toISOString() }).created_at.getTime()).toBe(reference.getTime());
   });
 
+  test('it should correctly transform a record', () => {
+    const schema = t.record(date.or(t.string));
+
+    const reference = new Date();
+    expect(schema.encode({ created_at: reference, thing: '123' })).toEqual({
+      created_at: reference.toISOString(),
+      thing: '123'
+    });
+    expect(schema.decode({ created_at: reference.toISOString() })).toEqual({ created_at: reference });
+  });
+
   test('it should correctly transform an array', () => {
     const schema = t.array(date);
 
