@@ -56,10 +56,15 @@ export enum CodecType {
   String = 'string',
   Number = 'number',
   Boolean = 'boolean',
+  Literal = 'literal',
+  Enum = 'enum',
+  Null = 'null',
+  Any = 'any',
 
   Object = 'object',
   Record = 'record',
   Array = 'array',
+  Tuple = 'tuple',
 
   Recursive = 'recursive',
 
@@ -112,6 +117,25 @@ export type ArrayCodec<T extends AnyCodec> = Codec<
   }
 >;
 
+export type AnyTuple = [AnyCodec, ...AnyCodec[]];
+
+export type AssertArray<T> = T extends any[] ? T : never;
+export type TupleIx<T extends AnyTuple> = AssertArray<{
+  [k in keyof T]: T[k] extends AnyCodec ? Ix<T[k]> : never;
+}>;
+export type TupleOx<T extends AnyTuple> = AssertArray<{
+  [k in keyof T]: T[k] extends AnyCodec ? Ox<T[k]> : never;
+}>;
+
+export type TupleCodec<T extends AnyTuple> = Codec<
+  TupleIx<T>,
+  TupleOx<T>,
+  CodecType.Tuple,
+  {
+    codecs: T;
+  }
+>;
+
 export type RecursiveCodec<T extends AnyCodec> = Codec<
   Ix<T>,
   Ox<T>,
@@ -133,3 +157,17 @@ type IdentityMapping<T extends CodecType> = T extends CodecType.String
   : never;
 
 export type IdentityCodec<T extends CodecType> = Codec<IdentityMapping<T>, IdentityMapping<T>, T>;
+
+export type LiteralCodec<T extends string> = Codec<T, T, CodecType.Literal>
+
+export type EnumLike = {
+  [key: string]: string;
+};
+export type EnumCodec<T extends EnumLike> = Codec<
+  T,
+  T,
+  CodecType.Enum,
+  {
+    enum: EnumLike;
+  }
+>;

@@ -14,8 +14,8 @@ export const recursive = <T extends defs.AnyCodec>(resolver: () => T): defs.Recu
       return codec.decode(data);
     },
     {
-      resolver: resolver,
-      id: crypto.randomBytes(10).toString('hex')
+      id: crypto.randomBytes(5).toString('hex'),
+      resolver: resolver
     }
   );
 };

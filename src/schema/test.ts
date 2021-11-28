@@ -50,13 +50,21 @@ const ResourceId = t.codec<{ _id: bson.ObjectId }, { id: string }>(
 
 const Thing = ResourceId.and(
   t.object({
-    a: t.string
+    a: t.string,
+    n: t.tuple([t.string, t.number]).optional(),
+    z: t.Null,
+    z1: t.any,
+    z2: t.literal('nice!')
   })
 );
 
 const res2 = Thing.encode({
   _id: new bson.ObjectId('61a218fb4775455399be93ad'),
-  a: ''
+  a: '',
+  // n: ['', 1],
+  z: null,
+  z1: '',
+  z2: 'nice!'
 });
 console.log(res2);
 
