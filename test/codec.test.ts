@@ -105,4 +105,52 @@ describe('codecs', () => {
       c: reference
     });
   });
+
+  test('it should correctly transform a recursive codec', () => {
+    type RecursiveDecoded = {
+      a: Date;
+      b?: RecursiveDecoded;
+    };
+
+    type RecursiveEncoded = {
+      a: string;
+      b?: RecursiveEncoded;
+    };
+
+    const Recursive: t.Codec<RecursiveDecoded, RecursiveEncoded> = t.recursive(() => {
+      return t.object({
+        a: date,
+        b: Recursive.optional()
+      });
+    });
+
+    const reference = new Date();
+    expect(
+      Recursive.encode({
+        a: reference,
+        b: {
+          a: reference
+        }
+      })
+    ).toEqual({
+      a: reference.toISOString(),
+      b: {
+        a: reference.toISOString()
+      }
+    });
+
+    expect(
+      Recursive.decode({
+        a: reference.toISOString(),
+        b: {
+          a: reference.toISOString()
+        }
+      })
+    ).toEqual({
+      a: reference,
+      b: {
+        a: reference
+      }
+    });
+  });
 });

@@ -58,6 +58,8 @@ export enum CodecType {
   Record = 'record',
   Array = 'array',
 
+  Recursive = 'recursive',
+
   Union = 'union',
   Intersection = 'intersection'
 }
@@ -92,6 +94,10 @@ export type RecordCodec<T extends AnyCodec> = TaggedCodec<
 
 export type ArrayCodec<T extends AnyCodec> = TaggedCodec<CodecType.Array, Ix<T>[], Ox<T>[]> & {
   element: T;
+};
+
+export type RecursiveCodec<T extends AnyCodec> = TaggedCodec<CodecType.Recursive, Ix<T>, Ox<T>> & {
+  resolver: () => T;
 };
 
 type IdentityMapping<T extends CodecType> = T extends CodecType.String
