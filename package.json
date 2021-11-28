@@ -3,6 +3,12 @@
   "version": "0.0.1",
   "main": "dist/index",
   "typings": "dist/@types/index",
+  "repository": "https://github.com/julienvincent/ts-codec.git",
+  "homepage": "https://github.com/julienvincent/ts-codec",
+  "author": {
+    "name": "Julien Vincent",
+    "email": "julienlucvincent@gmail.com"
+  },
   "files": [
     "./dist/**/*"
   ],
@@ -21,6 +27,8 @@
   "jest": {
     "verbose": true,
     "preset": "ts-jest",
-    "testMatch": ["./**/*.test.ts"]
+    "testMatch": [
+      "./**/*.test.ts"
+    ]
   }
 }
