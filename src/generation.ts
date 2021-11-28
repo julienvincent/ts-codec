@@ -6,21 +6,21 @@ export enum TransformTarget {
   Decoded = 'decoded'
 }
 
-type CommonParams = {
+export type CommonParams = {
   target: TransformTarget;
   parsers: Parser<string, AnyCodec>[];
   allowAdditional: boolean;
 };
 
-type GenerationOptions = Partial<CommonParams>;
+export type GenerationOptions = Partial<CommonParams>;
 
 type RecursiveCodecCache = Map<string, any>;
 type GenerationContext = CommonParams & {
   cache: RecursiveCodecCache;
 };
 
-type ParserFunction<C extends AnyCodec> = (codec: C, options: GenerationContext) => object;
-type Parser<T extends string, C extends AnyCodec> = {
+export type ParserFunction<C extends AnyCodec> = (codec: C, options: GenerationContext) => object;
+export type Parser<T extends string, C extends AnyCodec> = {
   tag: T;
   parse: ParserFunction<C>;
 };

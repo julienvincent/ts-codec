@@ -1,5 +1,8 @@
 {
-  "name": "codec",
+  "name": "ts-codec",
+  "version": "0.0.1",
+  "main": "dist/index",
+  "typings": "dist/@types/index",
   "scripts": {
     "build": "tsc -b",
     "test": "jest"
