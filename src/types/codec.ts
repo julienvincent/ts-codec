@@ -51,24 +51,19 @@ const mergeSameCodecs = <T extends defs.CodecType.Intersection | defs.CodecType.
 export const intersection = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>(c1: C1, c2: C2) => {
   const codecs = mergeSameCodecs(defs.CodecType.Intersection, c1, c2);
 
+  const transformer = (transformer: 'encode' | 'decode') => (data: any) => {
+    return codecs.reduce((acc, codec) => {
+      return {
+        ...acc,
+        ...codec[transformer](data)
+      };
+    }, {}) as any;
+  };
+
   const intersection = codec(
     defs.CodecType.Intersection,
-    (data) => {
-      return codecs.reduce((acc, codec) => {
-        return {
-          ...acc,
-          ...codec.encode(data)
-        };
-      }) as any;
-    },
-    (data) => {
-      return codecs.reduce((acc, codec) => {
-        return {
-          ...acc,
-          ...codec.decode(data)
-        };
-      }) as any;
-    }
+    transformer('encode'),
+    transformer('decode')
   ) as defs.Intersection<C1, C2>;
 
   intersection.codecs = codecs;
@@ -79,21 +74,29 @@ export const intersection = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>
 export const union = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>(c1: C1, c2: C2) => {
   const codecs = mergeSameCodecs(defs.CodecType.Union, c1, c2);
 
-  const union = codec(
-    defs.CodecType.Union,
-    (data) => {
-      // TODO: Finish
-      for (const codec of codecs) {
-        return codec.encode(data);
-      }
-    },
-    (data) => {
-      // TODO: Finish
-      for (const codec of codecs) {
-        return codec.decode(data);
+  const transformer = (transformer: 'encode' | 'decode') => (data: any) => {
+    const errors = [];
+    for (const codec of codecs) {
+      try {
+        return codec[transformer](data);
+      } catch (err) {
+        errors.push(err);
       }
     }
-  ) as defs.Union<C1, C2>;
+
+    throw new utils.TransformError(
+      errors
+        .map((error) => {
+          if (error instanceof utils.TransformError) {
+            return error.errors;
+          }
+          return error.toString();
+        })
+        .flat()
+    );
+  };
+
+  const union = codec(defs.CodecType.Union, transformer('encode'), transformer('decode')) as defs.Union<C1, C2>;
 
   union.codecs = codecs;
 
@@ -105,13 +108,13 @@ export const optional = <T extends defs.AnyCodec>(codec: T): defs.OptionalCodec<
     ...codec,
     required: false,
     encode: (data) => {
-      if (!data) {
+      if (data === undefined) {
         return undefined;
       }
       return codec.encode(data);
     },
     decode: (data) => {
-      if (!data) {
+      if (data === undefined) {
         return undefined;
       }
       return codec.decode(data);
