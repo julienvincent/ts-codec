@@ -13,7 +13,6 @@ export type Transformer<I, O> = (data: I) => O;
 
 export type Codec<I, O, T = string, P = CodecProps> = {
   _tag: T;
-
   props: CodecProps & P;
 
   meta: (metadata: CommonMetadata) => Codec<I, O, T, P>;
@@ -27,6 +26,8 @@ export type Codec<I, O, T = string, P = CodecProps> = {
   optional: () => OptionalCodec<Codec<I, O, T, P>>;
 };
 
+export type PassThroughCodec<T> = Codec<T, T>;
+
 export type AnyCodec = Codec<any, any, any, any>;
 
 export type Cx<C extends AnyCodec> = C extends Codec<infer I, infer O, infer T, infer P>
@@ -34,6 +35,9 @@ export type Cx<C extends AnyCodec> = C extends Codec<infer I, infer O, infer T, 
   : never;
 export type Ix<C extends AnyCodec> = Cx<C>['I'];
 export type Ox<C extends AnyCodec> = Cx<C>['O'];
+
+export type Encoded<T extends AnyCodec> = Ox<T>;
+export type Decoded<T extends AnyCodec> = Ix<T>;
 
 export type AnyObjectCodecShape = Record<string, AnyCodec>;
 
@@ -158,14 +162,21 @@ type IdentityMapping<T extends CodecType> = T extends CodecType.String
 
 export type IdentityCodec<T extends CodecType> = Codec<IdentityMapping<T>, IdentityMapping<T>, T>;
 
-export type LiteralCodec<T extends string> = Codec<T, T, CodecType.Literal>
+export type LiteralCodec<T extends string> = Codec<
+  T,
+  T,
+  CodecType.Literal,
+  {
+    value: T;
+  }
+>;
 
 export type EnumLike = {
   [key: string]: string;
 };
 export type EnumCodec<T extends EnumLike> = Codec<
-  T,
-  T,
+  T[keyof T],
+  T[keyof T],
   CodecType.Enum,
   {
     enum: EnumLike;

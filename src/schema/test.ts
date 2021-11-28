@@ -58,6 +58,8 @@ const Thing = ResourceId.and(
   })
 );
 
+type ttt = t.Decoded<typeof Thing>;
+
 const res2 = Thing.encode({
   _id: new bson.ObjectId('61a218fb4775455399be93ad'),
   a: '',
@@ -68,7 +70,6 @@ const res2 = Thing.encode({
 });
 console.log(res2);
 
-type ttt = t.Ix<typeof Thing>;
 
 // const schema2 = t
 //   .object({

@@ -8,10 +8,20 @@ describe('json-schema', () => {
   );
 
   test('it should handle a simple identity schema', () => {
+    enum SomeEnum {
+      A = 'a',
+      B = 'b'
+    }
+
     const identity_schema = t.object({
       string: t.string,
       number: t.number,
       boolean: t.boolean,
+      any: t.any,
+      null: t.Null,
+      literal: t.literal('literal'),
+      enum: t.Enum(SomeEnum),
+      tuple: t.tuple([t.string, t.number]),
       multi: t.string.or(t.number).or(t.boolean),
       optional: t.string.optional(),
 

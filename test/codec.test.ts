@@ -52,6 +52,24 @@ describe('codecs', () => {
     expect(schema.decode([reference.toISOString()])[0].getTime()).toBe(reference.getTime());
   });
 
+  test('it should correctly transform a tuple', () => {
+    const schema = t.tuple([t.string, t.number, date]);
+
+    const reference = new Date();
+    expect(schema.encode(['123', 1, reference])).toEqual(['123', 1, reference.toISOString()]);
+    expect(schema.decode(['123', 1, reference.toISOString()])).toEqual(['123', 1, reference]);
+  });
+
+  test('it should correctly transform an enum', () => {
+    enum SomeEnum {
+      A = 'a',
+      B = 'b'
+    }
+
+    const schema = t.Enum(SomeEnum);
+    expect(schema.encode(SomeEnum.A)).toEqual('a');
+  });
+
   test('it should correctly transform a union', () => {
     const schema = t.array(date).or(t.string);
 

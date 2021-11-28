@@ -47,6 +47,25 @@ const createPrimitiveParser = <T extends CodecType>(type: T): Parser<T, Identity
 const StringParser = createPrimitiveParser(CodecType.String);
 const NumberParser = createPrimitiveParser(CodecType.Number);
 const BooleanParser = createPrimitiveParser(CodecType.Boolean);
+const NullParser = createPrimitiveParser(CodecType.Null);
+
+const AnyParser = createParser<defs.AnyCodec>(CodecType.Any, (codec) => {
+  return {};
+});
+
+const EnumParser = createParser<defs.EnumCodec<any>>(CodecType.Enum, (codec) => {
+  return {
+    type: 'string',
+    enum: Object.values(codec.props.enum)
+  };
+});
+
+const LiteralParser = createParser<defs.LiteralCodec<any>>(CodecType.Literal, (codec) => {
+  return {
+    type: 'string',
+    enum: [codec.props.value]
+  };
+});
 
 const ObjectParser = createParser<defs.ObjectCodec<defs.AnyObjectCodecShape>>(CodecType.Object, (codec, options) => {
   const entries = Object.entries(codec.props.shape);
@@ -78,6 +97,13 @@ const ArrayParser = createParser<defs.ArrayCodec<AnyCodec>>(CodecType.Array, (co
   return {
     type: 'array',
     items: RootParser(codec.props.type, options)
+  };
+});
+
+const TupleParser = createParser<defs.TupleCodec<defs.AnyTuple>>(CodecType.Tuple, (codec, options) => {
+  return {
+    type: 'array',
+    prefixItems: codec.props.codecs.map((codec) => RootParser(codec, options))
   };
 });
 
@@ -143,12 +169,17 @@ const RootParser = (codec: AnyCodec, options: GenerationContext) => {
 export const generateJSONSchema = (codec: AnyCodec, options?: GenerationOptions) => {
   const parsers: Parser<any, any>[] = [
     ...(options?.parsers || []),
+    AnyParser,
     StringParser,
     NumberParser,
     BooleanParser,
+    NullParser,
+    LiteralParser,
+    EnumParser,
     ObjectParser,
     RecordParser,
     ArrayParser,
+    TupleParser,
     IntersectionParser,
     UnionParser,
     RecursiveParser

@@ -34,16 +34,16 @@ Object {
 
 exports[`json-schema it should generate schemas from recursive codecs 1`] = `
 Object {
-  "$ref": "#/definitions/6a348d17c935b63c65bb",
+  "$ref": "#/definitions/11300e4a6c",
   "definitions": Object {
-    "6a348d17c935b63c65bb": Object {
+    "11300e4a6c": Object {
       "additionalProperties": false,
       "properties": Object {
         "a": Object {
           "type": "string",
         },
         "b": Object {
-          "$ref": "#/definitions/6a348d17c935b63c65bb",
+          "$ref": "#/definitions/11300e4a6c",
         },
       },
       "required": Array [
@@ -60,6 +60,7 @@ Object {
   "additionalProperties": false,
   "definitions": Object {},
   "properties": Object {
+    "any": Object {},
     "array": Object {
       "items": Object {
         "type": "string",
@@ -83,6 +84,13 @@ Object {
         "type": "object",
       },
       "type": "array",
+    },
+    "enum": Object {
+      "enum": Array [
+        "a",
+        "b",
+      ],
+      "type": "string",
     },
     "intersection": Object {
       "allOf": Array [
@@ -112,6 +120,12 @@ Object {
         },
       ],
     },
+    "literal": Object {
+      "enum": Array [
+        "literal",
+      ],
+      "type": "string",
+    },
     "multi": Object {
       "anyOf": Array [
         Object {
@@ -124,6 +138,9 @@ Object {
           "type": "boolean",
         },
       ],
+    },
+    "null": Object {
+      "type": "null",
     },
     "number": Object {
       "type": "number",
@@ -142,11 +159,27 @@ Object {
     "string": Object {
       "type": "string",
     },
+    "tuple": Object {
+      "prefixItems": Array [
+        Object {
+          "type": "string",
+        },
+        Object {
+          "type": "number",
+        },
+      ],
+      "type": "array",
+    },
   },
   "required": Array [
     "string",
     "number",
     "boolean",
+    "any",
+    "null",
+    "literal",
+    "enum",
+    "tuple",
     "multi",
     "array",
     "deeper_array",

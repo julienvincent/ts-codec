@@ -23,7 +23,9 @@ export const literal = <T extends string>(literal: T): defs.LiteralCodec<T> => {
     }
     return data;
   };
-  return codec(defs.CodecType.Literal, transform, transform);
+  return codec(defs.CodecType.Literal, transform, transform, {
+    value: literal
+  });
 };
 
 const assertNull = (data: null) => {
