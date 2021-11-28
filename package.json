@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "main": "dist/index",
   "typings": "dist/@types/index",
+  "files": [
+    "./dist/**/*"
+  ],
   "scripts": {
     "build": "tsc -b",
     "test": "jest"
-  },
-  "dependencies": {
-    "bson": "^4.6.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.10",
