@@ -93,28 +93,36 @@ Object {
       "type": "string",
     },
     "intersection": Object {
-      "allOf": Array [
+      "anyOf": Array [
         Object {
           "additionalProperties": false,
           "properties": Object {
             "a": Object {
               "type": "string",
             },
+            "b": Object {
+              "type": "number",
+            },
           },
           "required": Array [
             "a",
+            "b",
           ],
           "type": "object",
         },
         Object {
           "additionalProperties": false,
           "properties": Object {
-            "b": Object {
+            "a": Object {
+              "type": "string",
+            },
+            "c": Object {
               "type": "number",
             },
           },
           "required": Array [
-            "b",
+            "a",
+            "c",
           ],
           "type": "object",
         },

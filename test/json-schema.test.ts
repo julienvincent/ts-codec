@@ -35,9 +35,15 @@ describe('json-schema', () => {
           a: t.string
         })
         .and(
-          t.object({
-            b: t.number
-          })
+          t
+            .object({
+              b: t.number
+            })
+            .or(
+              t.object({
+                c: t.number
+              })
+            )
         ),
 
       with_description: t.string.meta({
