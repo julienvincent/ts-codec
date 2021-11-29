@@ -23,12 +23,12 @@ export type Codec<I, O, T = string, P = CodecProps> = {
   and: <T extends AnyCodec>(codec: T) => Intersection<Codec<I, O>, T>;
   or: <T extends AnyCodec>(codec: T) => Union<Codec<I, O>, T>;
 
-  optional: () => OptionalCodec<Codec<I, O, T, P>>;
+  optional: () => OptionalCodec<Codec<I, O>>;
 };
 
 export type PassThroughCodec<T> = Codec<T, T>;
 
-export type AnyCodec = Codec<any, any, any>;
+export type AnyCodec = Codec<any, any, any, any>;
 
 export type Cx<C extends AnyCodec> = C extends Codec<infer I, infer O, infer T, infer P>
   ? { I: I; O: O; T: T; P: P }
@@ -41,20 +41,20 @@ export type Decoded<T extends AnyCodec> = Ix<T>;
 
 export type AnyObjectCodecShape = Record<string, AnyCodec>;
 
-type OptionalKeys<T extends object> = {
-  [K in keyof T]: undefined extends T[K] ? K : never;
+type OptionalKeys<T extends AnyObjectCodecShape> = {
+  [K in keyof T]: T[K] extends OptionalCodec<any> ? K : never;
 }[keyof T];
 
-type RequiredKeys<T extends object> = Exclude<keyof T, OptionalKeys<T>>;
+type RequiredKeys<T extends AnyObjectCodecShape> = Exclude<keyof T, OptionalKeys<T>>;
 
-type WithOptional<T extends object> = {
+type WithOptional<T extends AnyObjectCodecShape> = {
   [K in RequiredKeys<T>]: T[K];
 } & {
   [K in OptionalKeys<T>]?: T[K];
 };
 
-type MappedIx<T extends AnyObjectCodecShape> = WithOptional<{ [K in keyof T]: Ix<T[K]> }>;
-type MappedOx<T extends AnyObjectCodecShape> = WithOptional<{ [K in keyof T]: Ox<T[K]> }>;
+type MappedIx<T extends AnyObjectCodecShape> = { [K in keyof T]: Ix<T[K]> };
+type MappedOx<T extends AnyObjectCodecShape> = { [K in keyof T]: Ox<T[K]> };
 
 export enum CodecType {
   String = 'string',
@@ -64,6 +64,8 @@ export enum CodecType {
   Enum = 'enum',
   Null = 'null',
   Any = 'any',
+
+  Optional = 'optional',
 
   Object = 'object',
   Record = 'record',
@@ -95,8 +97,8 @@ export type Union<C1 extends AnyCodec, C2 extends AnyCodec> = Codec<
 >;
 
 export type ObjectCodec<T extends AnyObjectCodecShape> = Codec<
-  MappedIx<T>,
-  MappedOx<T>,
+  MappedIx<WithOptional<T>>,
+  MappedOx<WithOptional<T>>,
   CodecType.Object,
   {
     shape: T;
@@ -150,7 +152,12 @@ export type RecursiveCodec<T extends AnyCodec> = Codec<
   }
 >;
 
-export type OptionalCodec<T extends AnyCodec> = Codec<Ix<T> | undefined, Ox<T> | undefined, Cx<T>['T'], Cx<T>['P']>;
+export type OptionalCodec<T extends AnyCodec> = Codec<
+  Ix<T> | undefined,
+  Ox<T> | undefined,
+  CodecType.Optional,
+  Cx<T>['P']
+>;
 
 type IdentityMapping<T extends CodecType> = T extends CodecType.String
   ? string

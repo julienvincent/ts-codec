@@ -9,8 +9,8 @@ describe('codecs', () => {
 
   test('it should correctly transform a custom type', () => {
     const reference = new Date();
-    expect(date.encode(reference)).toBe(reference.toISOString());
-    expect(date.decode(reference.toISOString()).getTime()).toBe(reference.getTime());
+    expect(date.encode(reference)).toEqual(reference.toISOString());
+    expect(date.decode(reference.toISOString())).toEqual(reference);
   });
 
   test('it should correctly transform an object', () => {
@@ -20,17 +20,7 @@ describe('codecs', () => {
 
     const reference = new Date();
     expect(schema.encode({ created_at: reference })).toEqual({ created_at: reference.toISOString() });
-    expect(schema.decode({ created_at: reference.toISOString() }).created_at.getTime()).toBe(reference.getTime());
-  });
-
-  test('it should correctly transform an object', () => {
-    const schema = t.object({
-      created_at: date
-    });
-
-    const reference = new Date();
-    expect(schema.encode({ created_at: reference })).toEqual({ created_at: reference.toISOString() });
-    expect(schema.decode({ created_at: reference.toISOString() }).created_at.getTime()).toBe(reference.getTime());
+    expect(schema.decode({ created_at: reference.toISOString() })).toEqual({ created_at: reference });
   });
 
   test('it should correctly transform a record', () => {
@@ -49,7 +39,7 @@ describe('codecs', () => {
 
     const reference = new Date();
     expect(schema.encode([reference])).toEqual([reference.toISOString()]);
-    expect(schema.decode([reference.toISOString()])[0].getTime()).toBe(reference.getTime());
+    expect(schema.decode([reference.toISOString()])).toEqual([reference]);
   });
 
   test('it should correctly transform a tuple', () => {
@@ -77,7 +67,7 @@ describe('codecs', () => {
     expect(schema.encode([reference])).toEqual([reference.toISOString()]);
     expect(schema.encode('123')).toEqual('123');
 
-    expect((schema.decode([reference.toISOString()])[0] as Date).getTime()).toBe(reference.getTime());
+    expect(schema.decode([reference.toISOString()])).toEqual([reference]);
     expect(schema.decode('123')).toBe('123');
   });
 
