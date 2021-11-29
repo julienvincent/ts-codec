@@ -10,7 +10,7 @@
     "email": "julienlucvincent@gmail.com"
   },
   "files": [
-    "./dist/**/*"
+    "dist/**"
   ],
   "scripts": {
     "build": "tsc -b",
