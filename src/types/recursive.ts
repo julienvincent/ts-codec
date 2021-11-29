@@ -1,5 +1,4 @@
 import * as defs from '../definitions';
-import * as crypto from 'crypto';
 import { codec } from './codec';
 
 export const recursive = <T extends defs.AnyCodec>(resolver: () => T): defs.RecursiveCodec<T> => {
@@ -14,7 +13,7 @@ export const recursive = <T extends defs.AnyCodec>(resolver: () => T): defs.Recu
       return codec.decode(data);
     },
     {
-      id: crypto.randomBytes(5).toString('hex'),
+      id: String(Math.floor(Math.random() * (100000 + 1))),
       resolver: resolver
     }
   );

@@ -83,13 +83,24 @@ describe('json-schema', () => {
       b?: Schema;
     };
 
-    const schema: t.Codec<Schema, Schema> = t.recursive(() => {
+    const codec: t.Codec<Schema, Schema> = t.recursive(() => {
       return t.object({
         a: t.string,
-        b: schema.optional()
+        b: codec.optional()
       });
     });
 
-    expect(t.generateJSONSchema(schema)).toMatchSnapshot();
+    const schema = t.generateJSONSchema(codec);
+
+    const def = Object.keys(schema.definitions)[0];
+
+    schema.definitions = {
+      ['replaced']: schema.definitions[def]
+    };
+    schema.$ref = `#/definitions/replaced`;
+
+    schema.definitions.replaced.properties.b.$ref = '#/definitions/replaced';
+
+    expect(schema).toMatchSnapshot();
   });
 });

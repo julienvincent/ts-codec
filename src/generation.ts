@@ -62,6 +62,7 @@ const EnumParser = createParser<defs.EnumCodec<any>>(CodecType.Enum, (codec) => 
 
 const LiteralParser = createParser<defs.LiteralCodec<any>>(CodecType.Literal, (codec) => {
   return {
+    type: 'string',
     const: codec.props.value
   };
 });
@@ -102,7 +103,9 @@ const ArrayParser = createParser<defs.ArrayCodec<AnyCodec>>(CodecType.Array, (co
 const TupleParser = createParser<defs.TupleCodec<defs.AnyTuple>>(CodecType.Tuple, (codec, options) => {
   return {
     type: 'array',
-    prefixItems: codec.props.codecs.map((codec) => RootParser(codec, options))
+    items: codec.props.codecs.map((codec) => RootParser(codec, options)),
+    minItems: codec.props.codecs.length,
+    maxItems: codec.props.codecs.length
   };
 });
 
@@ -174,7 +177,7 @@ const RootParser = (codec: AnyCodec, options: GenerationContext) => {
   return schema;
 };
 
-export const generateJSONSchema = (codec: AnyCodec, options?: GenerationOptions) => {
+export const generateJSONSchema = (codec: AnyCodec, options?: GenerationOptions): Record<string, any> => {
   const parsers: Parser<any, any>[] = [
     ...(options?.parsers || []),
     AnyParser,
