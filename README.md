@@ -79,6 +79,7 @@ t.generateJSONSchema(schema, { parsers: [DateParser] });
 - [Intersection](#intersections-and-unions)
 - [Union](#intersections-and-unions)
 - [Optional](#optional)
+- [Metadata](#metametadata)
 - [Codec](#codectag-encoder-decoder-props)
 
 ### `primitives`
@@ -177,7 +178,9 @@ array.encode(['1', '2', 3]); // type error
 
 ### `.and(codec)`, `.or(codec)`
 
-Intersections and unions can be created by calling `.and(codec)` and `.or(codec)` on any codec
+Intersections and unions can be created by calling `.and(codec)` and `.or(codec)` on any codec.
+
+Calling `.and` and `.or` on a codec produces a new codec. It does _not_ modify the original
 
 ```ts
 import * as t from 'ts-codec';
@@ -198,7 +201,9 @@ schema.encode({ a: '', b: null }); // {a: '', b: null}
 
 ### `.optional()`
 
-Any codec can be made optional by calling `.optional()` on the codec
+Any codec can be made optional by calling `.optional()` on the codec.
+
+Calling `.optional` on a codec produces a new codec. It does _not_ modify the original
 
 ```ts
 import * as t from 'ts-codec';
@@ -211,6 +216,26 @@ const schema = t.object({
 type d = t.Encoded<typeof schema>; // {a?: string | undefined, b: number}
 
 schema.encode({ b: 1 }); // {b: 1}
+```
+
+### `.meta(metadata)`
+
+Codecs can have arbitrary metadata associated with them. This information is mostly intended to be consumed by codec parsers to assist in generation of data. An example useage of this would be adding `description` fields to JSON-schema or specifying special validation properties like `min: 1` or `pattern: /abc/`.
+
+Calling `.meta` on a codec produces a new codec. It does _not_ modify the original
+
+```ts
+import * as t from 'ts-codec';
+
+const schema = t.object({
+  name: t.string.meta({
+    description: 'The name of the schema'
+  }),
+  things: t.number.meta({
+    description: 'The number of things this schema can have',
+    min: 5
+  })
+});
 ```
 
 ### `.codec(tag, encoder, decoder[, props])`
