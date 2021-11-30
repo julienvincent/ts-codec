@@ -14,9 +14,16 @@ npm install ts-codec
 
 ## What is ts-codec
 
-This tool was built to solve a specific set of use-cases surrounding validation and Serialization/Deserialization of data in TypeScript applications. This is achieved by providing a suite of tagged `Codecs` designed to be composed together in order to describe 2-way data schemas and derive static TypeScript types from. These schemas can then be encoded as JSON-Schema to be used for data validation through other exelent JSON-schema validation tools like [AJV](https://github.com/ajv-validator/ajv).
+This tool was built to solve a specific set of use-cases surrounding validation and Serialization/Deserialization of data in TypeScript applications. This is achieved by providing a suite of tagged `Codecs` designed to be composed together in order to describe 2-way data schemas and derive static TypeScript types from. These schemas can then be encoded as JSON-Schema to be used for data validation through other excellent JSON-schema validation tools like [AJV](https://github.com/ajv-validator/ajv).
 
-This tool is heavilly inspired by other similar tools like [Zod](https://github.com/colinhacks/zod) and [io-ts](https://github.com/gcanti/io-ts) and can almost be seen as a type of marriage of the two in order to achieve something slightly different. The codec API follows Zod's quite closely (Thanks colinhacks for the hard work :) with the exception that it is altered to support two-way transformations of data.
+This tool is heavily inspired by other similar tools like [Zod](https://github.com/colinhacks/zod) and [io-ts](https://github.com/gcanti/io-ts) and can almost be seen as a type of marriage of the two in order to achieve something slightly different. The codec API follows Zod's quite closely (Thanks colinhacks for the hard work :) with the exception that it is altered to support two-way transformations of data.
+
+In summary, the goals of this project are:
+
+- Describe a _single_ schema that can;
+- Encode and Decode data (Date <-> string, for example)
+- Be used to derive TypeScript types from both the Encoded and Decoded form
+- Be used to validate data, both in the Encoded and Decoded form
 
 ## Quick Example
 
@@ -121,7 +128,7 @@ FruitEnum.encode('apple'); // type error
 
 ### `.object(shape)`
 
-Accepts an arbitrarilly nested map of key => codec
+Accepts an arbitrarily nested map of key => codec
 
 ```ts
 import * as t from 'ts-codec';
@@ -220,7 +227,7 @@ schema.encode({ b: 1 }); // {b: 1}
 
 ### `.meta(metadata)`
 
-Codecs can have arbitrary metadata associated with them. This information is mostly intended to be consumed by codec parsers to assist in generation of data. An example useage of this would be adding `description` fields to JSON-schema or specifying special validation properties like `min: 1` or `pattern: /abc/`.
+Codecs can have arbitrary metadata associated with them. This information is mostly intended to be consumed by codec parsers to assist in generation of data. An example usage of this would be adding `description` fields to JSON-schema or specifying special validation properties like `min: 1` or `pattern: /abc/`.
 
 Calling `.meta` on a codec produces a new codec. It does _not_ modify the original
 
@@ -244,7 +251,7 @@ The `.codec` function can be used to construct custom codecs. Any codec can be c
 
 The `tag` is a unique identifier for the codec _type_ and should not collide with any of the other codecs. This value can be used by parsers in order to generate data from a codec tree. For example, the JSON-Schema generator included uses these to determine what type of JSON-schema to produce as it encounters codecs.
 
-When building custom codecs it is important to ensure that they check the data they are transforming. If incoming data is unexpected then they _must_ explicitly throw. This behaviour is relied apon to support unions which will sequentially encode/decode data using codecs until one succeeds.
+When building custom codecs it is important to ensure that they check the data they are transforming. If incoming data is unexpected then they _must_ explicitly throw. This behavior is relied upon to support unions which will sequentially encode/decode data using codecs until one succeeds.
 
 ```ts
 import * as t from 'ts-codec';

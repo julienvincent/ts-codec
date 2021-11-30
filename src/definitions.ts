@@ -169,7 +169,7 @@ type IdentityMapping<T extends CodecType> = T extends CodecType.String
 
 export type IdentityCodec<T extends CodecType> = Codec<IdentityMapping<T>, IdentityMapping<T>, T>;
 
-export type LiteralCodec<T extends string> = Codec<
+export type LiteralCodec<T extends string | number | boolean | null> = Codec<
   T,
   T,
   CodecType.Literal,
