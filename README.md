@@ -10,7 +10,7 @@ npm install ts-codec
   - [Getting started example](#quick-example)
 - [Codec Library](#codec-library)
 - [Gotchas](#gotchas)
-- [References](#references)
+- [Related Projects](#related-projects)
 
 ## What is ts-codec
 
@@ -308,6 +308,27 @@ schema.encode({ a: '', b: true }); // The record encoder will throw
 
 One way of solving this might be to pass only the subset of data that was not evaluated against the object codec to the record codec.
 
-## References
+## Related Projects
 
-This library would not exist without the work from [Zod](https://github.com/colinhacks/zod) and [io-ts](https://github.com/gcanti/io-ts), and would not make sense without other great tools like [AJV](https://github.com/ajv-validator/ajv)
+### io-ts
+
+[https://github.com/gcanti/io-ts](https://github.com/gcanti/io-ts)
+
+The concept of Codecs was inspired by this project, but there are a few differences:
+
++ The very functional API is can be quite verbose, both for defining custom Codecs and for building schemas. The Zod API however is debatably much more pragmatic.
++ There is limited or no support for converting io-ts schemas into JSON-Schema. This is a problem for two reasons:
+  + There is no nice way to have cross-language compatibility
+  + There is no nice way to generate API documentation
+
+Ts-codec on the other hand was built with a focus on being parsable - allowing it to be easily transformed to JSON-Schema or other data formats
+
+### zod
+
+[https://github.com/colinhacks/zod](https://github.com/colinhacks/zod)
+
+The API for ts-codec was primarily based on Zod's, but also with a few differences:
+
++ Zod can only describe transformation of data in one direction.
++ Zod can only validate data on the `input` side of it's data transformation
++ While possible to generate JSON-Schema for Zod schemas, they can only be generated for the `input` side of it's transformation
