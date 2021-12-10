@@ -1,6 +1,6 @@
 export * from './definitions';
 
-export * from './generation';
+export * from './json-schema';
 
 export * from './types/primitives';
 export * from './types/recursive';

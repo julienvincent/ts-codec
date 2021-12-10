@@ -1,8 +1,8 @@
 import * as defs from './definitions';
 
 export class TransformError extends Error {
-  constructor(readonly errors: string[]) {
-    super(errors.join(', '));
+  constructor(readonly errors: string | string[]) {
+    super(Array.isArray(errors) ? errors.join(', ') : errors);
     this.name = 'TransformError';
   }
 }

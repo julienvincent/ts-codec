@@ -4,10 +4,10 @@ import { codec } from './codec';
 
 const objectAssertion = (data: any) => {
   if (Array.isArray(data)) {
-    throw new utils.TransformError(['Expected a map but got an array']);
+    throw new utils.TransformError('Expected a map but got an array');
   }
   if (typeof data !== 'object') {
-    throw new utils.TransformError([`Expected a map but got ${typeof data}`]);
+    throw new utils.TransformError(`Expected a map but got ${typeof data}`);
   }
 };
 
