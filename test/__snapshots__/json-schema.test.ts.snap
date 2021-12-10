@@ -202,3 +202,147 @@ Object {
   "type": "object",
 }
 `;
+
+exports[`json-schema it should intersect a set of only unions 1`] = `
+Object {
+  "allOf": Array [
+    Object {
+      "anyOf": Array [
+        Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "a": Object {
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "a",
+          ],
+          "type": "object",
+        },
+        Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "b": Object {
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "b",
+          ],
+          "type": "object",
+        },
+      ],
+    },
+    Object {
+      "anyOf": Array [
+        Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "c": Object {
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "c",
+          ],
+          "type": "object",
+        },
+        Object {
+          "additionalProperties": false,
+          "properties": Object {
+            "d": Object {
+              "type": "string",
+            },
+          },
+          "required": Array [
+            "d",
+          ],
+          "type": "object",
+        },
+      ],
+    },
+  ],
+  "definitions": Object {},
+}
+`;
+
+exports[`json-schema it should merge intersections 1`] = `
+Object {
+  "additionalProperties": false,
+  "definitions": Object {},
+  "properties": Object {
+    "a": Object {
+      "type": "string",
+    },
+    "b": Object {
+      "type": "string",
+    },
+    "c": Object {
+      "type": "string",
+    },
+  },
+  "required": Array [
+    "a",
+    "b",
+    "c",
+  ],
+  "type": "object",
+}
+`;
+
+exports[`json-schema it should merge intersections 2`] = `
+Object {
+  "additionalProperties": false,
+  "definitions": Object {},
+  "properties": Object {
+    "a": Object {
+      "type": "string",
+    },
+  },
+  "required": Array [
+    "a",
+  ],
+  "type": "object",
+}
+`;
+
+exports[`json-schema it should product intersections containing union and object schemas 1`] = `
+Object {
+  "anyOf": Array [
+    Object {
+      "additionalProperties": false,
+      "properties": Object {
+        "a": Object {
+          "type": "string",
+        },
+        "b": Object {
+          "type": "string",
+        },
+      },
+      "required": Array [
+        "a",
+        "b",
+      ],
+      "type": "object",
+    },
+    Object {
+      "additionalProperties": false,
+      "properties": Object {
+        "a": Object {
+          "type": "string",
+        },
+        "c": Object {
+          "type": "string",
+        },
+      },
+      "required": Array [
+        "a",
+        "c",
+      ],
+      "type": "object",
+    },
+  ],
+  "definitions": Object {},
+}
+`;

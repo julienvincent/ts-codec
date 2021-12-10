@@ -7,6 +7,22 @@ describe('json-schema', () => {
     (date) => new Date(date)
   );
 
+  const A = t.object({
+    a: t.string
+  });
+
+  const B = t.object({
+    b: t.string
+  });
+
+  const C = t.object({
+    c: t.string
+  });
+
+  const D = t.object({
+    d: t.string
+  });
+
   test('it should handle a simple identity schema', () => {
     enum SomeEnum {
       A = 'a',
@@ -108,5 +124,18 @@ describe('json-schema', () => {
     schema.definitions.replaced.properties.b.$ref = '#/definitions/replaced';
 
     expect(schema).toMatchSnapshot();
+  });
+
+  test('it should merge intersections', () => {
+    expect(t.generateJSONSchema(A.and(B).and(C))).toMatchSnapshot();
+    expect(t.generateJSONSchema(A.and(A))).toMatchSnapshot();
+  });
+
+  test('it should product intersections containing union and object schemas', () => {
+    expect(t.generateJSONSchema(A.and(B.or(C)))).toMatchSnapshot();
+  });
+
+  test('it should intersect a set of only unions', () => {
+    expect(t.generateJSONSchema(A.or(B).and(C.or(D)))).toMatchSnapshot();
   });
 });

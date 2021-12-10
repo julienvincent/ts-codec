@@ -33,10 +33,23 @@ export const IntersectionParser = createParser<defs.Intersection<defs.AnyCodec, 
           ...b.properties
         },
         additionalProperties: !!options?.allowAdditional,
-        required: [...a.required, ...b.required]
+        required: Array.from(new Set([...a.required, ...b.required]))
       };
     };
 
+    /**
+     * If the intersection contains _only_ unions then we can return an `allOf` schema
+     */
+    if (unions.length > 0 && object_schemas.length === 0) {
+      return {
+        allOf: unions
+      };
+    }
+
+    /**
+     * If the intersection contains a mix of unions and object schemas then we need to produce
+     * the cartesian product of objects X unions
+     */
     if (unions.length > 0) {
       return {
         anyOf: unions.reduce((schemas: any[], union) => {
@@ -49,6 +62,9 @@ export const IntersectionParser = createParser<defs.Intersection<defs.AnyCodec, 
       };
     }
 
+    /**
+     * Lastly, if the intersection contains only object schemas then we merge them into a single object schema
+     */
     return {
       type: 'object',
       properties: schemas.reduce((properties, schema: any) => {
@@ -58,15 +74,22 @@ export const IntersectionParser = createParser<defs.Intersection<defs.AnyCodec, 
         };
       }, {}),
       additionalProperties: !!options?.allowAdditional,
-      required: schemas.reduce((required: string[], schema: any) => {
-        return required.concat(schema.required || []);
-      }, [])
+      required: Array.from(
+        new Set(
+          schemas.reduce((required: string[], schema: any) => {
+            return required.concat(schema.required || []);
+          }, [])
+        )
+      )
     };
   }
 );
 
-export const UnionParser = createParser<defs.Union<defs.AnyCodec, defs.AnyCodec>>(defs.CodecType.Union, (codec, options) => {
-  return {
-    anyOf: codec.props.codecs.map((codec) => root.RootParser(codec, options))
-  };
-});
+export const UnionParser = createParser<defs.Union<defs.AnyCodec, defs.AnyCodec>>(
+  defs.CodecType.Union,
+  (codec, options) => {
+    return {
+      anyOf: codec.props.codecs.map((codec) => root.RootParser(codec, options))
+    };
+  }
+);
