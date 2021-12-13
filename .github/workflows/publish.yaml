@@ -31,6 +31,6 @@ jobs:
       run: pnpm test
 
     - name: Configure .npmrc
-      run: echo _auth=$NPM_TOKEN >> ~/.npmrc
+      run: echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> ~/.npmrc
     - name: Publish
       run: pnpm publish
