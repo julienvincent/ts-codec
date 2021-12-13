@@ -30,5 +30,7 @@ jobs:
     - name: Test
       run: pnpm test
 
+    - name: Configure .npmrc
+      run: echo _auth=$NPM_TOKEN >> ~/.npmrc
     - name: Publish
       run: pnpm publish

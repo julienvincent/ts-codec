@@ -9,7 +9,6 @@
     "composite": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": true,
     "useUnknownInCatchVariables": false,
     "outDir": "dist",
     "declarationDir": "dist/@types",
