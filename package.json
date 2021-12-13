@@ -1,6 +1,6 @@
 {
   "name": "ts-codec",
-  "version": "0.1.6",
+  "version": "1.0.0",
   "main": "dist/index",
   "typings": "dist/@types/index",
   "repository": "https://github.com/julienvincent/ts-codec.git",
