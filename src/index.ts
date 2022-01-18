@@ -2,6 +2,7 @@ export * from './definitions';
 
 export * from './json-schema';
 
+export * from './types/combinators';
 export * from './types/primitives';
 export * from './types/recursive';
 export * from './types/arrays';

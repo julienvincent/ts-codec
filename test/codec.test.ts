@@ -71,6 +71,52 @@ describe('codecs', () => {
     expect(schema.decode('123')).toBe('123');
   });
 
+  test('it should correctly omit a mask from an object codec', () => {
+    const Schema = t.object({
+      a: t.string,
+      b: t.string
+    });
+
+    const WithOmit = t.omit(Schema, ['a']);
+    expect(WithOmit.encode({ b: 'test' })).toEqual({ b: 'test' });
+  });
+
+  test('it should correctly omit a mask from an intersection codec', () => {
+    const Schema = t
+      .object({
+        a: t.string
+      })
+      .and(
+        t.object({
+          b: t.string
+        })
+      );
+
+    const WithOmit = t.omit(Schema, ['a']);
+    expect(WithOmit.encode({ b: 'test' })).toEqual({ b: 'test' });
+  });
+
+  test('it should correctly omit a mask from a union codec', () => {
+    const Schema = t
+      .object({
+        a: t.string,
+        c: t.string
+      })
+      .or(
+        t.object({
+          b: t.string
+        })
+      )
+      .or(
+        t.object({
+          a: t.string
+        })
+      );
+
+    const WithOmit = t.omit(Schema, ['a'] as any);
+    expect(WithOmit.encode({ c: 'test' })).toEqual({ c: 'test' });
+  });
+
   test('it should correctly transform an intersection', () => {
     const schema = t
       .object({
