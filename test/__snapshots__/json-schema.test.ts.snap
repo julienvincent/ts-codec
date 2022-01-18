@@ -34,16 +34,16 @@ Object {
 
 exports[`json-schema it should generate schemas from recursive codecs 1`] = `
 Object {
-  "$ref": "#/definitions/replaced",
+  "$ref": "#/definitions/RecursiveCodec",
   "definitions": Object {
-    "replaced": Object {
+    "RecursiveCodec": Object {
       "additionalProperties": false,
       "properties": Object {
         "a": Object {
           "type": "string",
         },
         "b": Object {
-          "$ref": "#/definitions/replaced",
+          "$ref": "#/definitions/RecursiveCodec",
         },
       },
       "required": Array [

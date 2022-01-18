@@ -105,25 +105,14 @@ describe('json-schema', () => {
       b?: Schema;
     };
 
-    const codec: t.Codec<Schema, Schema> = t.recursive(() => {
+    const RecursiveCodec: t.Codec<Schema, Schema> = t.recursive('RecursiveCodec', () => {
       return t.object({
         a: t.string,
-        b: codec.optional()
+        b: RecursiveCodec.optional()
       });
     });
 
-    const schema = t.generateJSONSchema(codec);
-
-    const def = Object.keys(schema.definitions)[0];
-
-    schema.definitions = {
-      ['replaced']: schema.definitions[def]
-    };
-    schema.$ref = `#/definitions/replaced`;
-
-    schema.definitions.replaced.properties.b.$ref = '#/definitions/replaced';
-
-    expect(schema).toMatchSnapshot();
+    expect(t.generateJSONSchema(RecursiveCodec)).toMatchSnapshot();
   });
 
   test('it should merge intersections', () => {

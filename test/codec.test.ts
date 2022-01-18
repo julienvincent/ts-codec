@@ -125,7 +125,7 @@ describe('codecs', () => {
       b?: RecursiveEncoded;
     };
 
-    const Recursive: t.Codec<RecursiveDecoded, RecursiveEncoded> = t.recursive(() => {
+    const Recursive: t.Codec<RecursiveDecoded, RecursiveEncoded> = t.recursive('Recursive', () => {
       return t.object({
         a: date,
         b: Recursive.optional()
