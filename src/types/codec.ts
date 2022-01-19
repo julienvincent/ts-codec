@@ -118,6 +118,9 @@ export const union = <C1 extends defs.AnyCodec, C2 extends defs.AnyCodec>(c1: C1
 };
 
 export const optional = <T extends defs.AnyCodec>(type: T): defs.OptionalCodec<T> => {
+  if (!type.props.required) {
+    return type;
+  }
   return codec(
     type._tag,
     (data) => {

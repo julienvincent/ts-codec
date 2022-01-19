@@ -117,6 +117,49 @@ describe('codecs', () => {
     expect(WithOmit.encode({ c: 'test' })).toEqual({ c: 'test' });
   });
 
+  test('it should correctly create a partial from an object codec', () => {
+    const Schema = t.object({
+      a: t.string,
+      c: t.string
+    });
+
+    const Partial = t.partial(Schema);
+    expect(Partial.encode({})).toEqual({});
+    expect(Partial.encode({ a: 'test' })).toEqual({ a: 'test' });
+  });
+
+  test('it should correctly create a partial from an intersection codec', () => {
+    const Schema = t
+      .object({
+        a: t.string
+      })
+      .and(
+        t.object({
+          c: t.string
+        })
+      );
+
+    const Partial = t.partial(Schema);
+    expect(Partial.encode({})).toEqual({});
+    expect(Partial.encode({ c: 'test' })).toEqual({ c: 'test' });
+  });
+
+  test('it should correctly create a partial from a union codec', () => {
+    const Schema = t
+      .object({
+        a: t.string
+      })
+      .or(
+        t.object({
+          c: t.string
+        })
+      );
+
+    const Partial = t.partial(Schema);
+    expect(Partial.encode({})).toEqual({});
+    expect(Partial.encode({ a: 'test' })).toEqual({ a: 'test' });
+  });
+
   test('it should correctly transform an intersection', () => {
     const schema = t
       .object({

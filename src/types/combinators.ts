@@ -68,3 +68,62 @@ export const omit = <T extends SupportedCodec, K extends keyof defs.Ix<T>, Mask 
 
   return omitMaskFromCodec(codec);
 };
+
+export type PartialCodec<C extends SupportedCodec> = defs.Codec<
+  Partial<defs.Ix<C>>,
+  Partial<defs.Ox<C>>,
+  defs.Cx<C>['T'],
+  defs.Cx<C>['P']
+>;
+
+export const partial = <T extends SupportedCodec>(codec: T): PartialCodec<T> => {
+  const partialObjectCodec = (codec: defs.ObjectCodec<defs.AnyObjectCodecShape>) => {
+    const entries = Object.entries(codec.props.shape).map(([key, codec]) => {
+      return [key, codec.optional()];
+    });
+    return maps.object(Object.fromEntries(entries));
+  };
+
+  const partialIntersectionCodec = <C extends defs.Intersection<any, any>>(codec: C): PartialCodec<C> => {
+    const codecs = codec.props.codecs.map(createPartialCodec);
+
+    return c.codec(
+      defs.CodecType.Intersection,
+      c.createIntersectionTransformer('encode', codecs),
+      c.createIntersectionTransformer('decode', codecs),
+      {
+        codecs
+      }
+    );
+  };
+
+  const partialUnionCodec = <C extends defs.Union<any, any>>(codec: C): PartialCodec<C> => {
+    const codecs = codec.props.codecs.map(createPartialCodec);
+
+    return c.codec(
+      defs.CodecType.Union,
+      c.createUnionTransformer('encode', codecs),
+      c.createUnionTransformer('decode', codecs),
+      {
+        codecs
+      }
+    );
+  };
+
+  const createPartialCodec = (codec: SupportedCodec) => {
+    switch (codec._tag) {
+      case defs.CodecType.Object: {
+        return partialObjectCodec(codec);
+      }
+
+      case defs.CodecType.Intersection: {
+        return partialIntersectionCodec(codec);
+      }
+      case defs.CodecType.Union: {
+        return partialUnionCodec(codec);
+      }
+    }
+  };
+
+  return createPartialCodec(codec);
+};
