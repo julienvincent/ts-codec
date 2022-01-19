@@ -86,6 +86,8 @@ t.generateJSONSchema(schema, { parsers: [DateParser] });
 - [Intersection](#intersections-and-unions)
 - [Union](#intersections-and-unions)
 - [Optional](#optional)
+- [Omit](#omit)
+- [Partial](#partial)
 - [Metadata](#metametadata)
 - [Codec](#codectag-encoder-decoder-props)
 
@@ -221,6 +223,46 @@ const schema = t.object({
 });
 
 type d = t.Encoded<typeof schema>; // {a?: string | undefined, b: number}
+
+schema.encode({ b: 1 }); // {b: 1}
+```
+
+### `.omit(codec, mask)`
+
+Calling `.omit(codec, mask)` will produce a new codec with object properties omitted according to the given mask. Acts similar to TS `Omit<T, Mask>`.
+
+Calling `.omit` on a codec produces a new codec. It does _not_ modify the original
+
+```ts
+import * as t from 'ts-codec';
+
+const Schema = t.object({
+  a: t.string,
+  b: t.number
+});
+const WithOmit = t.omit(Schema, ['b']);
+
+type d = t.Encoded<typeof WithOmit>; // {a: string}
+
+schema.encode({ a: '1' }); // {a: '1'}
+```
+
+### `.partial(codec)`
+
+Calling `.partial(codec)` will produce a new codec with all top-level object properties made optional. Acts similar to TS `Partial<T>`.
+
+Calling `.partial` on a codec produces a new codec. It does _not_ modify the original
+
+```ts
+import * as t from 'ts-codec';
+
+const Schema = t.object({
+  a: t.string,
+  b: t.number
+});
+const WithPartial = t.partial(Schema);
+
+type d = t.Encoded<typeof WithPartial>; // {a?: string, b?: number}
 
 schema.encode({ b: 1 }); // {b: 1}
 ```

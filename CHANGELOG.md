@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.0] - 2022-01-19
+### Added
+- Added a new `partial` codec to make all fields of an object-like codec optional. Acts similar to TS `Partial<T>`
+
 ## [1.1.0] - 2022-01-18
 ### Added
 - Added a new `omit` codec to mask out fields from an object-like codec. Acts similar to TS `Omit<T, mask>`
