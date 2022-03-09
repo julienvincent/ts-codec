@@ -16,7 +16,7 @@ export const string = identityCodec(defs.CodecType.String);
 export const boolean = identityCodec(defs.CodecType.Boolean);
 export const number = identityCodec(defs.CodecType.Number);
 
-export const literal = <T extends string>(literal: T): defs.LiteralCodec<T> => {
+export const literal = <T extends string | boolean | number>(literal: T): defs.LiteralCodec<T> => {
   const transform = (data: T) => {
     if (data !== literal) {
       throw new utils.TransformError(`Expected '${literal}' but go '${data}'`);

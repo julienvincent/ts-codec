@@ -25,7 +25,7 @@ export const EnumParser = createParser<defs.EnumCodec<any>>(defs.CodecType.Enum,
 
 export const LiteralParser = createParser<defs.LiteralCodec<any>>(defs.CodecType.Literal, (codec) => {
   return {
-    type: 'string',
+    type: typeof codec.props.value,
     const: codec.props.value
   };
 });

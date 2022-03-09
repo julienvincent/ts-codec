@@ -128,7 +128,15 @@ Object {
         },
       ],
     },
-    "literal": Object {
+    "literal_bool": Object {
+      "const": true,
+      "type": "boolean",
+    },
+    "literal_num": Object {
+      "const": 1,
+      "type": "number",
+    },
+    "literal_string": Object {
       "const": "literal",
       "type": "string",
     },
@@ -189,7 +197,9 @@ Object {
     "boolean",
     "any",
     "null",
-    "literal",
+    "literal_string",
+    "literal_num",
+    "literal_bool",
     "enum",
     "tuple",
     "multi",
