@@ -10,10 +10,10 @@ import * as root from './root';
  * If the intersection contains only object schemas then they are all merged under a single schema so
  * that `additionalProperties` applies against them simultaneously.
  *
- * If the intersection contains a mix of object schemas and unions then we need to construct the cartesian
- * product of all unions against all object schemas, combining them under a single `anyOf` definition. Each
- * product will be a merged schema with `additionalProperties` applying against all properties contained
- * within.
+ * If the intersection contains a mix of object schemas and unions then we need to construct the product
+ * of all unions against a merge of all object schemas, combining them under a single `anyOf` definition.
+ * Each product will be a merged schema with `additionalProperties` applying against all properties
+ * contained within.
  *
  * Note: You can only really intersect object schemas and so we do not check for any other type of schema
  */
@@ -25,15 +25,23 @@ export const IntersectionParser = createParser<defs.Intersection<defs.AnyCodec, 
     const unions = schemas.filter((schema) => !!schema.anyOf);
     const object_schemas = schemas.filter((schema) => schema.type === 'object');
 
-    const mergeObjectSchemas = (a: any, b: any) => {
+    const mergeObjectSchemas = (...schemas: any[]) => {
       return {
         type: 'object',
-        properties: {
-          ...a.properties,
-          ...b.properties
-        },
+        properties: schemas.reduce((properties, schema: any) => {
+          return {
+            ...properties,
+            ...(schema.properties || {})
+          };
+        }, {}),
         additionalProperties: !!options?.allowAdditional,
-        required: Array.from(new Set([...a.required, ...b.required]))
+        required: Array.from(
+          new Set(
+            schemas.reduce((required: string[], schema: any) => {
+              return required.concat(schema.required || []);
+            }, [])
+          )
+        )
       };
     };
 
@@ -47,16 +55,17 @@ export const IntersectionParser = createParser<defs.Intersection<defs.AnyCodec, 
     }
 
     /**
-     * If the intersection contains a mix of unions and object schemas then we need to produce
-     * the cartesian product of objects X unions
+     * If the intersection contains a mix of unions and object schemas then we need to merge all
+     * object schemas into a single schema and product it with each union.
+     *
+     * {...merged_object_schemas} X unions
      */
     if (unions.length > 0) {
+      const merged = mergeObjectSchemas(...object_schemas);
       return {
         anyOf: unions.reduce((schemas: any[], union) => {
-          return union.anyOf.reduce((schemas: any[], us: any) => {
-            return object_schemas.reduce((schemas, os) => {
-              return schemas.concat(mergeObjectSchemas(os, us));
-            }, schemas);
+          return union.anyOf.reduce((schemas: any[], union_schema: any) => {
+            return schemas.concat(mergeObjectSchemas(union_schema, merged));
           }, schemas);
         }, [])
       };
@@ -65,23 +74,7 @@ export const IntersectionParser = createParser<defs.Intersection<defs.AnyCodec, 
     /**
      * Lastly, if the intersection contains only object schemas then we merge them into a single object schema
      */
-    return {
-      type: 'object',
-      properties: schemas.reduce((properties, schema: any) => {
-        return {
-          ...properties,
-          ...(schema.properties || {})
-        };
-      }, {}),
-      additionalProperties: !!options?.allowAdditional,
-      required: Array.from(
-        new Set(
-          schemas.reduce((required: string[], schema: any) => {
-            return required.concat(schema.required || []);
-          }, [])
-        )
-      )
-    };
+    return mergeObjectSchemas(...schemas);
   }
 );
 

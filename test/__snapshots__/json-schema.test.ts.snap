@@ -105,8 +105,8 @@ Object {
             },
           },
           "required": Array [
-            "a",
             "b",
+            "a",
           ],
           "type": "object",
         },
@@ -121,8 +121,8 @@ Object {
             },
           },
           "required": Array [
-            "a",
             "c",
+            "a",
           ],
           "type": "object",
         },
@@ -329,10 +329,14 @@ Object {
         "b": Object {
           "type": "string",
         },
+        "d": Object {
+          "type": "string",
+        },
       },
       "required": Array [
-        "a",
         "b",
+        "a",
+        "d",
       ],
       "type": "object",
     },
@@ -345,10 +349,14 @@ Object {
         "c": Object {
           "type": "string",
         },
+        "d": Object {
+          "type": "string",
+        },
       },
       "required": Array [
-        "a",
         "c",
+        "a",
+        "d",
       ],
       "type": "object",
     },

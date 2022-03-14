@@ -123,7 +123,7 @@ describe('json-schema', () => {
   });
 
   test('it should product intersections containing union and object schemas', () => {
-    expect(t.generateJSONSchema(A.and(B.or(C)))).toMatchSnapshot();
+    expect(t.generateJSONSchema(B.or(C).and(A.and(D)))).toMatchSnapshot();
   });
 
   test('it should intersect a set of only unions', () => {
