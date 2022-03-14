@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.2] - 2022-01-19
+### Fixed
+- Merge all object JSON-Schemas before product'ing with JSON-Schema unions during an intersection
+
+### Changed
+- Throw an error when an unsupported codec is used in an omit
+
+## [1.2.1] - 2022-01-19
+### Added
+- Allow boolean and number as literal values
+
 ## [1.2.0] - 2022-01-19
 ### Added
 - Added a new `partial` codec to make all fields of an object-like codec optional. Acts similar to TS `Partial<T>`
