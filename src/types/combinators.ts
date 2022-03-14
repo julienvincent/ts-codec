@@ -51,17 +51,19 @@ export const omit = <T extends SupportedCodec, K extends keyof defs.Ix<T>, Mask 
     );
   };
 
-  const omitMaskFromCodec = (codec: SupportedCodec) => {
+  const omitMaskFromCodec = (codec: defs.AnyCodec) => {
     switch (codec._tag) {
       case defs.CodecType.Object: {
         return omitFromObjectCodec(codec);
       }
-
       case defs.CodecType.Intersection: {
         return omitFromIntersectionCodec(codec);
       }
       case defs.CodecType.Union: {
         return omitFromUnionCodec(codec);
+      }
+      default: {
+        throw new Error(`Unsupported codec ${codec._tag}`);
       }
     }
   };
