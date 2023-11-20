@@ -30,7 +30,7 @@ In summary, the goals of this project are:
 Just to demonstrate the basics and help get the idea across
 
 ```ts
-import * as t from 'ts-codecs';
+import * as t from 'ts-codec';
 
 const date = t.codec<Date, string>(
   'Date',
@@ -49,7 +49,7 @@ schema.decode({ name: 'James', date: '1970-01-01T00:00:00.000Z' }); // { name: '
 type d = t.Decoded<typeof schema>; // { name: string; date: Date; }
 type d = t.Encoded<typeof schema>; // { name: string; date: string; }
 
-// Parser for the custom `date` codec that isn't part of the standard set provided by ts-codecs
+// Parser for the custom `date` codec that isn't part of the standard set provided by ts-codec
 const DateParser = {
   tag: date._tag,
   parse: () => ({ type: 'string' })
