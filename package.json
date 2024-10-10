@@ -1,6 +1,6 @@
 {
   "name": "ts-codec",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "main": "dist/index",
   "typings": "dist/@types/index",
   "repository": "https://github.com/julienvincent/ts-codec.git",
@@ -14,21 +14,13 @@
   ],
   "scripts": {
     "build": "tsc -b",
-    "test": "jest"
+    "test": "vitest",
+    "format": "prettier --write \"**/*.ts\""
   },
   "devDependencies": {
-    "@swc-node/jest": "^1.4.3",
-    "@types/jest": "^27.0.3",
-    "@types/node": "^16.11.10",
-    "jest": "^27.3.1",
-    "prettier": "^2.5.0",
-    "typescript": "^4.5.2"
-  },
-  "jest": {
-    "verbose": true,
-    "preset": "@swc-node/jest",
-    "testMatch": [
-      "./**/*.test.ts"
-    ]
+    "@types/node": "^22.7.5",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
   }
 }

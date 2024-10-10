@@ -30,9 +30,8 @@ export type PassThroughCodec<T> = Codec<T, T>;
 
 export type AnyCodec = Codec<any, any, any, any>;
 
-export type Cx<C extends AnyCodec> = C extends Codec<infer I, infer O, infer T, infer P>
-  ? { I: I; O: O; T: T; P: P }
-  : never;
+export type Cx<C extends AnyCodec> =
+  C extends Codec<infer I, infer O, infer T, infer P> ? { I: I; O: O; T: T; P: P } : never;
 export type Ix<C extends AnyCodec> = Cx<C>['I'];
 export type Ox<C extends AnyCodec> = Cx<C>['O'];
 
@@ -162,10 +161,10 @@ export type OptionalCodec<T extends AnyCodec> = Codec<
 type IdentityMapping<T extends CodecType> = T extends CodecType.String
   ? string
   : T extends CodecType.Number
-  ? number
-  : T extends CodecType.Boolean
-  ? boolean
-  : never;
+    ? number
+    : T extends CodecType.Boolean
+      ? boolean
+      : never;
 
 export type IdentityCodec<T extends CodecType> = Codec<IdentityMapping<T>, IdentityMapping<T>, T>;
 

@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.0] - 2024-10-10
+### Improved
+- Error messages for mapped types
+- Project upgrade (node version, dependencies)
+- [Internal] Moved from jest to vitest to reduce config complexity
+
 ## [1.2.2] - 2022-01-19
 ### Fixed
 - Merge all object JSON-Schemas before product'ing with JSON-Schema unions during an intersection
@@ -23,7 +29,7 @@ All notable changes to this project will be documented in this file.
 - Added a new `omit` codec to mask out fields from an object-like codec. Acts similar to TS `Omit<T, mask>`
 
 ### Changed
-- The `recursive` codec now takes an explicit id as its first argument instead of generating a random on on call
+- The `recursive` codec now takes an explicit id as its first argument instead of generating a random on call
 
 ## [1.0.0] - 2021-12-13
 ### Added

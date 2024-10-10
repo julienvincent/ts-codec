@@ -1,52 +1,52 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`json-schema it should generate schemas from dual codecs 1`] = `
-Object {
+exports[`json-schema > it should generate schemas from dual codecs 1`] = `
+{
   "additionalProperties": false,
-  "definitions": Object {},
-  "properties": Object {
-    "created_at": Object {
+  "definitions": {},
+  "properties": {
+    "created_at": {
       "type": "string",
     },
   },
-  "required": Array [
+  "required": [
     "created_at",
   ],
   "type": "object",
 }
 `;
 
-exports[`json-schema it should generate schemas from dual codecs 2`] = `
-Object {
+exports[`json-schema > it should generate schemas from dual codecs 2`] = `
+{
   "additionalProperties": false,
-  "definitions": Object {},
-  "properties": Object {
-    "created_at": Object {
+  "definitions": {},
+  "properties": {
+    "created_at": {
       "nodeType": "date",
     },
   },
-  "required": Array [
+  "required": [
     "created_at",
   ],
   "type": "object",
 }
 `;
 
-exports[`json-schema it should generate schemas from recursive codecs 1`] = `
-Object {
+exports[`json-schema > it should generate schemas from recursive codecs 1`] = `
+{
   "$ref": "#/definitions/RecursiveCodec",
-  "definitions": Object {
-    "RecursiveCodec": Object {
+  "definitions": {
+    "RecursiveCodec": {
       "additionalProperties": false,
-      "properties": Object {
-        "a": Object {
+      "properties": {
+        "a": {
           "type": "string",
         },
-        "b": Object {
+        "b": {
           "$ref": "#/definitions/RecursiveCodec",
         },
       },
-      "required": Array [
+      "required": [
         "a",
       ],
       "type": "object",
@@ -55,72 +55,72 @@ Object {
 }
 `;
 
-exports[`json-schema it should handle a simple identity schema 1`] = `
-Object {
+exports[`json-schema > it should handle a simple identity schema 1`] = `
+{
   "additionalProperties": false,
-  "definitions": Object {},
-  "properties": Object {
-    "any": Object {},
-    "array": Object {
-      "items": Object {
+  "definitions": {},
+  "properties": {
+    "any": {},
+    "array": {
+      "items": {
         "type": "string",
       },
       "type": "array",
     },
-    "boolean": Object {
+    "boolean": {
       "type": "boolean",
     },
-    "deeper_array": Object {
-      "items": Object {
+    "deeper_array": {
+      "items": {
         "additionalProperties": false,
-        "properties": Object {
-          "a": Object {
+        "properties": {
+          "a": {
             "type": "string",
           },
         },
-        "required": Array [
+        "required": [
           "a",
         ],
         "type": "object",
       },
       "type": "array",
     },
-    "enum": Object {
-      "enum": Array [
+    "enum": {
+      "enum": [
         "a",
         "b",
       ],
       "type": "string",
     },
-    "intersection": Object {
-      "anyOf": Array [
-        Object {
+    "intersection": {
+      "anyOf": [
+        {
           "additionalProperties": false,
-          "properties": Object {
-            "a": Object {
+          "properties": {
+            "a": {
               "type": "string",
             },
-            "b": Object {
+            "b": {
               "type": "number",
             },
           },
-          "required": Array [
+          "required": [
             "b",
             "a",
           ],
           "type": "object",
         },
-        Object {
+        {
           "additionalProperties": false,
-          "properties": Object {
-            "a": Object {
+          "properties": {
+            "a": {
               "type": "string",
             },
-            "c": Object {
+            "c": {
               "type": "number",
             },
           },
-          "required": Array [
+          "required": [
             "c",
             "a",
           ],
@@ -128,57 +128,57 @@ Object {
         },
       ],
     },
-    "literal_bool": Object {
+    "literal_bool": {
       "const": true,
       "type": "boolean",
     },
-    "literal_num": Object {
+    "literal_num": {
       "const": 1,
       "type": "number",
     },
-    "literal_string": Object {
+    "literal_string": {
       "const": "literal",
       "type": "string",
     },
-    "multi": Object {
-      "anyOf": Array [
-        Object {
+    "multi": {
+      "anyOf": [
+        {
           "type": "string",
         },
-        Object {
+        {
           "type": "number",
         },
-        Object {
+        {
           "type": "boolean",
         },
       ],
     },
-    "null": Object {
+    "null": {
       "type": "null",
     },
-    "number": Object {
+    "number": {
       "type": "number",
     },
-    "optional": Object {
+    "optional": {
       "type": "string",
     },
-    "record": Object {
-      "additionalProperties": Object {
+    "record": {
+      "additionalProperties": {
         "type": "string",
       },
-      "properties": Object {},
-      "required": Array [],
+      "properties": {},
+      "required": [],
       "type": "object",
     },
-    "string": Object {
+    "string": {
       "type": "string",
     },
-    "tuple": Object {
-      "items": Array [
-        Object {
+    "tuple": {
+      "items": [
+        {
           "type": "string",
         },
-        Object {
+        {
           "type": "number",
         },
       ],
@@ -186,12 +186,12 @@ Object {
       "minItems": 2,
       "type": "array",
     },
-    "with_description": Object {
+    "with_description": {
       "description": "This is a description",
       "type": "string",
     },
   },
-  "required": Array [
+  "required": [
     "string",
     "number",
     "boolean",
@@ -213,59 +213,59 @@ Object {
 }
 `;
 
-exports[`json-schema it should intersect a set of only unions 1`] = `
-Object {
-  "allOf": Array [
-    Object {
-      "anyOf": Array [
-        Object {
+exports[`json-schema > it should intersect a set of only unions 1`] = `
+{
+  "allOf": [
+    {
+      "anyOf": [
+        {
           "additionalProperties": false,
-          "properties": Object {
-            "a": Object {
+          "properties": {
+            "a": {
               "type": "string",
             },
           },
-          "required": Array [
+          "required": [
             "a",
           ],
           "type": "object",
         },
-        Object {
+        {
           "additionalProperties": false,
-          "properties": Object {
-            "b": Object {
+          "properties": {
+            "b": {
               "type": "string",
             },
           },
-          "required": Array [
+          "required": [
             "b",
           ],
           "type": "object",
         },
       ],
     },
-    Object {
-      "anyOf": Array [
-        Object {
+    {
+      "anyOf": [
+        {
           "additionalProperties": false,
-          "properties": Object {
-            "c": Object {
+          "properties": {
+            "c": {
               "type": "string",
             },
           },
-          "required": Array [
+          "required": [
             "c",
           ],
           "type": "object",
         },
-        Object {
+        {
           "additionalProperties": false,
-          "properties": Object {
-            "d": Object {
+          "properties": {
+            "d": {
               "type": "string",
             },
           },
-          "required": Array [
+          "required": [
             "d",
           ],
           "type": "object",
@@ -273,26 +273,26 @@ Object {
       ],
     },
   ],
-  "definitions": Object {},
+  "definitions": {},
 }
 `;
 
-exports[`json-schema it should merge intersections 1`] = `
-Object {
+exports[`json-schema > it should merge intersections 1`] = `
+{
   "additionalProperties": false,
-  "definitions": Object {},
-  "properties": Object {
-    "a": Object {
+  "definitions": {},
+  "properties": {
+    "a": {
       "type": "string",
     },
-    "b": Object {
+    "b": {
       "type": "string",
     },
-    "c": Object {
+    "c": {
       "type": "string",
     },
   },
-  "required": Array [
+  "required": [
     "a",
     "b",
     "c",
@@ -301,59 +301,59 @@ Object {
 }
 `;
 
-exports[`json-schema it should merge intersections 2`] = `
-Object {
+exports[`json-schema > it should merge intersections 2`] = `
+{
   "additionalProperties": false,
-  "definitions": Object {},
-  "properties": Object {
-    "a": Object {
+  "definitions": {},
+  "properties": {
+    "a": {
       "type": "string",
     },
   },
-  "required": Array [
+  "required": [
     "a",
   ],
   "type": "object",
 }
 `;
 
-exports[`json-schema it should product intersections containing union and object schemas 1`] = `
-Object {
-  "anyOf": Array [
-    Object {
+exports[`json-schema > it should product intersections containing union and object schemas 1`] = `
+{
+  "anyOf": [
+    {
       "additionalProperties": false,
-      "properties": Object {
-        "a": Object {
+      "properties": {
+        "a": {
           "type": "string",
         },
-        "b": Object {
+        "b": {
           "type": "string",
         },
-        "d": Object {
+        "d": {
           "type": "string",
         },
       },
-      "required": Array [
+      "required": [
         "b",
         "a",
         "d",
       ],
       "type": "object",
     },
-    Object {
+    {
       "additionalProperties": false,
-      "properties": Object {
-        "a": Object {
+      "properties": {
+        "a": {
           "type": "string",
         },
-        "c": Object {
+        "c": {
           "type": "string",
         },
-        "d": Object {
+        "d": {
           "type": "string",
         },
       },
-      "required": Array [
+      "required": [
         "c",
         "a",
         "d",
@@ -361,6 +361,6 @@ Object {
       "type": "object",
     },
   ],
-  "definitions": Object {},
+  "definitions": {},
 }
 `;

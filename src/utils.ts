@@ -5,6 +5,10 @@ export class TransformError extends Error {
     super(Array.isArray(errors) ? errors.join(', ') : errors);
     this.name = 'TransformError';
   }
+
+  get errorsArray() {
+    return Array.isArray(this.errors) ? this.errors : [this.errors];
+  }
 }
 
 export function isCodecType<T extends defs.CodecType.String | defs.CodecType.Number | defs.CodecType.Boolean>(
