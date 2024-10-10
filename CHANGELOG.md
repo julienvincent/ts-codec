@@ -23,7 +23,7 @@ All notable changes to this project will be documented in this file.
 - Added a new `omit` codec to mask out fields from an object-like codec. Acts similar to TS `Omit<T, mask>`
 
 ### Changed
-- The `recursive` codec now takes an explicit id as its first argument instead of generating a random on on call
+- The `recursive` codec now takes an explicit id as its first argument instead of generating a random on call
 
 ## [1.0.0] - 2021-12-13
 ### Added
