@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`codecs > should correctly report missing fields in a object recursively 1`] = `
+[
+  "field_1 > type must be string, received undefined",
+  "field_2 > type must be boolean, received undefined",
+  "field_3 > field_4 > type must be string, received undefined",
+]
+`;
+
+exports[`codecs > should correctly report missing fields in a record 1`] = `
+[
+  "field_1 > type must be string, received object",
+  "field_2 > type must be string, received undefined",
+  "field_3 > type must be string, received object",
+]
+`;
