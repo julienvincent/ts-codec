@@ -8,7 +8,7 @@ exports[`codecs > should correctly report missing fields in a object recursively
 ]
 `;
 
-exports[`codecs > should correctly report missing fields in a record 1`] = `
+exports[`codecs > should correctly report wrong fields in a record 1`] = `
 [
   "field_1 > type must be string, received object",
   "field_2 > type must be string, received undefined",

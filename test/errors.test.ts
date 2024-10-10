@@ -24,7 +24,7 @@ describe('codecs', () => {
     expect(errors).toMatchSnapshot();
   });
 
-  it('should correctly report missing fields in a record', () => {
+  it('should correctly report wrong fields in a record', () => {
     const object = t.record(t.string);
 
     let errors: string[] = [];
