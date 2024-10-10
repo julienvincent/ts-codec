@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.0] - 2024-10-10
+### Improved
+- Error messages for mapped types
+- Project upgrade (node version, dependencies)
+- [Internal] Moved from jest to vitest to reduce config complexity
+
 ## [1.2.2] - 2022-01-19
 ### Fixed
 - Merge all object JSON-Schemas before product'ing with JSON-Schema unions during an intersection
